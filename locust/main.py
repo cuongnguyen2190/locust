@@ -26,7 +26,6 @@ from .shape import LoadTestShape
 from .input_events import input_listener
 from .html import get_html_report
 
-
 version = locust.__version__
 
 
@@ -302,6 +301,7 @@ def main():
     # need access to the Environment, Runner or WebUI.
     if options.master:
         logger.info("Trigger init event")
+        logger.info(f"List of handlers: {environment.events.init._handlers}")
         environment.events.init.fire(environment=environment, runner=runner, web_ui=web_ui)
 
     if web_ui:
