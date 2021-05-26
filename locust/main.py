@@ -300,7 +300,9 @@ def main():
 
     # Fire locust init event which can be used by end-users' code to run setup code that
     # need access to the Environment, Runner or WebUI.
-    environment.events.init.fire(environment=environment, runner=runner, web_ui=web_ui)
+    if options.master:
+        print("\n Trigger init event")
+        environment.events.init.fire(environment=environment, runner=runner, web_ui=web_ui)
 
     if web_ui:
         web_ui.start()
