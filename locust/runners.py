@@ -521,6 +521,9 @@ class MasterRunner(DistributedRunner):
 
         self.environment.events.quitting.add_listener(on_quitting)
 
+        logger.info("Trigger init event on master node")
+        self.environment.events.init.fire(environment=self.environment)
+
     @property
     def user_count(self):
         return sum([c.user_count for c in self.clients.values()])
@@ -560,7 +563,6 @@ class MasterRunner(DistributedRunner):
         if self.state != STATE_RUNNING and self.state != STATE_SPAWNING:
             self.stats.clear_all()
             self.exceptions = {}
-            print("\n Trigger test start event on master runner")
             self.environment.events.test_start.fire(environment=self.environment)
             if self.environment.shape_class:
                 self.environment.shape_class.reset_time()
