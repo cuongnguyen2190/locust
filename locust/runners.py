@@ -409,6 +409,8 @@ class LocalRunner(Runner):
 
         if self.state != STATE_RUNNING and self.state != STATE_SPAWNING:
             # if we're not already running we'll fire the test_start event
+            logger.info("Trigger init event on local runner")
+            self.environment.events.init.fire(environment=self.environment)
             self.environment.events.test_start.fire(environment=self.environment)
 
         if self.spawning_greenlet:
@@ -521,9 +523,6 @@ class MasterRunner(DistributedRunner):
 
         self.environment.events.quitting.add_listener(on_quitting)
 
-        logger.info("Trigger init event on master node")
-        self.environment.events.init.fire(environment=self.environment)
-
     @property
     def user_count(self):
         return sum([c.user_count for c in self.clients.values()])
@@ -563,6 +562,8 @@ class MasterRunner(DistributedRunner):
         if self.state != STATE_RUNNING and self.state != STATE_SPAWNING:
             self.stats.clear_all()
             self.exceptions = {}
+            logger.info("Trigger init event on master node")
+            self.environment.events.init.fire(environment=self.environment)
             self.environment.events.test_start.fire(environment=self.environment)
             if self.environment.shape_class:
                 self.environment.shape_class.reset_time()
